@@ -16,17 +16,12 @@ RUN . .venv/bin/activate && pip install --upgrade pip && \
     pip install wheel auditwheel twine keyrings.cryptfile
 ADD scripts /scripts
 RUN /scripts/build.sh
-ENTRYPOINT /scripts/upload.sh
+ENTRYPOINT ["/scripts/upload.sh"]
 EOF
 
     docker build -t python-apt:$deb_version .
     rm Dockerfile
 done
-
-if [ "$1" != "prod" ]
-then
-    echo 'Note: uploading to testpypi -- add argument "prod" to target the real PyPI instance.'
-fi
 
 for deb_version in buster bullseye
 do
