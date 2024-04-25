@@ -5,8 +5,13 @@ set -x
 # find the version of the apt package in this debian version
 version=$(apt search python3-apt | grep 'python3-apt/' \
            | awk '{print $2}')
-# point to the corresponding git tag of the repo
-git checkout $version
+# point to the corresponding git tag of the repo,
+# or, as a fallback if no such tag exists, look for a git log line
+# announcing this version.
+git checkout $version || {
+    set -- $(git log --oneline | grep -i "Release $version")
+    git checkout $1
+}
 # setup.py will use env variable DEBVER for the version
 export DEBVER=$version
 sed -i -e 's/name="python-apt"/name="python-apt-binary"/' setup.py

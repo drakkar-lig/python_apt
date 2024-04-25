@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-for deb_version in buster bullseye
+for deb_version in bookworm
 do
     cat >> Dockerfile  << EOF
 
@@ -23,7 +23,7 @@ EOF
     rm Dockerfile
 done
 
-for deb_version in buster bullseye
+for deb_version in bookworm
 do
     docker run -it --rm python-apt:$deb_version "$@"
 done
